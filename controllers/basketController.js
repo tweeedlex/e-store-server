@@ -15,7 +15,7 @@ class BasketController {
 
             // check if item already in basket
             
-            const checkItem = await BasketItem.findOne({where: {itemId}})
+            const checkItem = await BasketItem.findOne({where: {itemId, basketId: basket.id}})
             if (checkItem) {
                 return res.status(400).json({message: "Item already in basket"})
             } 

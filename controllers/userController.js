@@ -33,7 +33,7 @@ class UserController {
             return res.status(200).json({message: "User was succesfully registered"})
         } catch (e) {
             console.log(e)
-            return res.status(400).json({message: e})
+            return res.status(400).json(e)
         }       
     }
 
@@ -55,6 +55,7 @@ class UserController {
             return res.json(token)
         } catch (e) {
             console.log(e)
+            res.status(400).json(e)
         }       
     }
 }
