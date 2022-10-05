@@ -2,14 +2,35 @@ const {Type} = require("../models")
 
 class TypeController {
     async create(req, res) {
-        const {name} = req.body
-        const type = await Type.create({name})
-        return res.json(type)
+        try {
+            const {name} = req.body
+            const type = await Type.create({name})
+            return res.json(type)
+        } catch (e) {
+            console.log(e)
+            res.status(400).json(e)
+        }        
     }
 
     async getAll(req, res) {
-        const types = await Type.findAll()
-        return res.json(types)
+        try {
+            const types = await Type.findAll()
+            return res.json(types)
+        } catch (e) {
+            console.log(e)
+            res.status(400).json(e)
+        }        
+    }
+
+    async getOne(req, res) {
+        try {
+            const {id} = req.params
+            const type = await Type.findOne({where: {id}})
+            return res.json(type.name)
+        } catch (e) {
+            console.log(e)
+            res.status(400).json(e)
+        }
     }
 }
 

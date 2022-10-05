@@ -12,12 +12,9 @@ const roleMiddleWare = require("../middleware/roleMiddleware")
 
 router.use("/user", userRouter)
 router.use("/basket", authMiddleWare, basketRouter)
-router.use("/type", authMiddleWare, roleMiddleWare("ADMIN"), typeRouter)
-router.use("/brand", authMiddleWare, roleMiddleWare("ADMIN"), brandRouter)
-router.use("/item", authMiddleWare, roleMiddleWare("ADMIN"), itemRouter)
-
-router.get("/test", authMiddleWare, roleMiddleWare("ADMIN"), (req, res) => res.json("res"))
-// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+router.use("/type", typeRouter)
+router.use("/brand", brandRouter)
+router.use("/item", itemRouter)
 
 
 module.exports = router

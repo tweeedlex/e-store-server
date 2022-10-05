@@ -3,10 +3,9 @@ const path = require("path")
 const { Item } = require("../models")
 
 class ItemController {
-    async create(req, res, next) {
+    async create(req, res) {
         try {
             const {name, price, brandId, typeId, info} = req.body
-            console.log(req.files)
             const {img} = req.files
             let fileName = uuid.v4() + ".jpg"
             img.mv(path.resolve(__dirname, "..", "static", fileName))
@@ -48,11 +47,11 @@ class ItemController {
 
     async getOne(req, res) {
         try {
-            const {id} = req.query
+            const {id} = req.params
             const item = await Item.findOne({where: {id}})
             res.status(200).json(item)
         } catch (e) {
-            res.json(400).json(e)
+            res.status(400).json(e)
             console.log(e)
         }        
     }

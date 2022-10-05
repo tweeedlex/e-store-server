@@ -21,6 +21,17 @@ class BrandController {
             res.status(400).json(e)
         }
     }
+
+    async getOne(req, res) {
+        try {
+            const {id} = req.params
+            const brand = await Brand.findOne({where: {id}})
+            return res.json(brand.name)
+        } catch (e) {
+            console.log(e)
+            res.status(400).json(e)
+        }
+    }
 }
 
 module.exports = new BrandController()

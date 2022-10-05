@@ -2,6 +2,7 @@ const { User, Basket } = require("../models")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const secret = require("../config").secret
+const {validationResult} = require("express-validator")
 
 const createAccessToken = (user) => {
     const payload = {
@@ -16,6 +17,13 @@ const createAccessToken = (user) => {
 class UserController {
     async registration(req, res) {
         try {
+            // validation
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({errors: errors.array()})
+            }
+
+            console.log(req.body)
             const {email, password} = req.body
 
             const candidate = await User.findOne({where: {email}})
@@ -30,7 +38,7 @@ class UserController {
             const basket = new Basket({userId: user.id})
             await basket.save()
 
-            return res.status(200).json({message: "User was succesfully registered"})
+            return res.status(200).json({message: "You succesfully registered"})
         } catch (e) {
             console.log(e)
             return res.status(400).json(e)
