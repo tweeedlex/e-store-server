@@ -20,12 +20,14 @@ class ItemController {
 
     async getAll(req, res) {
         try {
-            let {brandId, typeId, limit, page} = req.query
+            let {brandId, typeId, limit, page, itemList} = req.query
+
             page = page || 1
             limit = Number(limit) || 9
             let offset = page * limit - limit
 
-            let items
+            let items = []
+
             if (!brandId && !typeId) {
                 items = await Item.findAndCountAll({limit, offset})
             }
@@ -37,6 +39,17 @@ class ItemController {
             }
             if (brandId && typeId) {
                 items = await Item.findAndCountAll({where: {brandId, typeId}, limit, offset})
+            }
+
+            if (itemList) {
+                items = []
+                itemList = itemList.split(",").filter(item => item !== "")
+                console.log(itemList)
+                for (let itemId of itemList) {
+                    const foundItem = await Item.findOne({where: {id: +itemId}})
+                    items.push(foundItem)
+                }
+                return res.json(items)
             }
             return res.json(items)
         } catch (e) {

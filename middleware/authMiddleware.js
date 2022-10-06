@@ -16,6 +16,6 @@ module.exports = authMiddleWare = (req, res, next) => {
         req.user = user
         next()
     } catch (e) {
-        res.json({message: "User is not authorized"})
+        res.status(400).json({message: "User is not authorized"})
     }    
 }
