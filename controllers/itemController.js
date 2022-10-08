@@ -44,7 +44,6 @@ class ItemController {
             if (itemList) {
                 items = []
                 itemList = itemList.split(",").filter(item => item !== "")
-                console.log(itemList)
                 for (let itemId of itemList) {
                     const foundItem = await Item.findOne({where: {id: +itemId}})
                     items.push(foundItem)
