@@ -66,6 +66,10 @@ class UserController {
             res.status(400).json(e)
         }       
     }
+
+    async getRole(req, res) {
+        return res.json(req.user.role)
+    }
 }
 
 module.exports = new UserController()

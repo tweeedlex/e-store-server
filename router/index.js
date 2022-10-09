@@ -8,7 +8,6 @@ const typeRouter = require("./typeRouter")
 const basketRouter = require("./basketRouter")
 
 const authMiddleWare = require("../middleware/authMiddleware")
-const roleMiddleWare = require("../middleware/roleMiddleware")
 
 router.use("/user", userRouter)
 router.use("/basket", authMiddleWare, basketRouter)
