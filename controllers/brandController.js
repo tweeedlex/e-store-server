@@ -31,6 +31,22 @@ class BrandController {
             console.log(e)
             res.status(400).json(e)
         }
+    } 
+
+    async delete(req, res) {
+        try {
+            const {id} = req.params
+            const brand = await Brand.findOne({where: {id}})
+            if (!brand) {
+                return res.status(400).json({message: "Invalid id"})
+            }
+
+            await Brand.destroy({where: {id}})
+            return res.status(200).json({message: "You deleted brand with id " + id})
+        } catch (e) {
+            console.log(e)
+            res.status(400).json(e)
+        }
     }
 }
 

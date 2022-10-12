@@ -23,7 +23,6 @@ class UserController {
                 return res.status(400).json({errors: errors.array()})
             }
 
-            console.log(req.body)
             const {email, password} = req.body
 
             const candidate = await User.findOne({where: {email}})

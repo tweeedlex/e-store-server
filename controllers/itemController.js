@@ -5,12 +5,12 @@ const { Item } = require("../models")
 class ItemController {
     async create(req, res) {
         try {
-            const {name, price, brandId, typeId, info} = req.body
-            const {img} = req.files
+            const { name, price, brandId, typeId, info } = req.body
+            const { img } = req.files
             let fileName = uuid.v4() + ".jpg"
             img.mv(path.resolve(__dirname, "..", "static", fileName))
 
-            const item = await Item.create({name, price, brandId, typeId, info, img: fileName})
+            const item = await Item.create({ name, price, brandId, typeId, info, img: fileName })
             return res.json(item)
         } catch (e) {
             console.log(e)
@@ -20,7 +20,7 @@ class ItemController {
 
     async getAll(req, res) {
         try {
-            let {brandId, typeId, limit, page, itemList} = req.query
+            let { brandId, typeId, limit, page, itemList } = req.query
 
             page = page || 1
             limit = Number(limit) || 9
@@ -29,23 +29,23 @@ class ItemController {
             let items = []
 
             if (!brandId && !typeId) {
-                items = await Item.findAndCountAll({limit, offset})
+                items = await Item.findAndCountAll({ limit, offset })
             }
             if (brandId && !typeId) {
-                items = await Item.findAndCountAll({where: {brandId}, limit, offset})
+                items = await Item.findAndCountAll({ where: { brandId }, limit, offset })
             }
             if (!brandId && typeId) {
-                items = await Item.findAndCountAll({where: {typeId}, limit, offset})
+                items = await Item.findAndCountAll({ where: { typeId }, limit, offset })
             }
             if (brandId && typeId) {
-                items = await Item.findAndCountAll({where: {brandId, typeId}, limit, offset})
+                items = await Item.findAndCountAll({ where: { brandId, typeId }, limit, offset })
             }
 
             if (itemList) {
                 items = []
                 itemList = itemList.split(",").filter(item => item !== "")
                 for (let itemId of itemList) {
-                    const foundItem = await Item.findOne({where: {id: +itemId}})
+                    const foundItem = await Item.findOne({ where: { id: +itemId } })
                     items.push(foundItem)
                 }
                 return res.json(items)
@@ -54,18 +54,74 @@ class ItemController {
         } catch (e) {
             res.status(400).json(e)
             console.log(e)
-        }        
+        }
     }
 
     async getOne(req, res) {
         try {
-            const {id} = req.params
-            const item = await Item.findOne({where: {id}})
+            const { id } = req.params
+            const item = await Item.findOne({ where: { id } })
             res.status(200).json(item)
         } catch (e) {
             res.status(400).json(e)
             console.log(e)
-        }        
+        }
+    }
+
+    async delete(req, res) {
+        try {
+            let { brandId, typeId } = req.query
+
+            if (brandId && !typeId) {
+                const items = await Item.findAll({ where: { brandId } })
+                if (!items.length) {
+                    return res.status(400).json({ message: "Invalid id" })
+                }
+
+                await Item.destroy({ where: { brandId } })
+            }
+            if (!brandId && typeId) {
+                const items = await Item.findAll({ where: { typeId } })
+                if (!items.length) {
+                    return res.status(400).json({ message: "Invalid id" })
+                }
+
+                await Item.destroy({ where: { typeId } })
+            }
+            if (brandId && typeId) {
+                const items = await Item.findAll({ where: { brandId, typeId } })
+                if (!items.length) {
+                    return res.status(400).json({ message: "Invalid ids" })
+                }
+
+                await Item.destroy({ where: { brandId, typeId } })
+            }
+            if (!brandId && !typeId) {
+                return res.status(400).json({ message: "Invalid request" })
+            }
+
+            return res.status(200).json({ message: "Items deleted" })
+        } catch (e) {
+            res.status(400).json(e)
+            console.log(e)
+        }
+    }
+
+    async deleteOne(req, res) {
+        try {
+            const { id } = req.params
+            
+            const item = await Item.findOne({ where: { id } })
+            if (!item) {
+                return res.status(400).json({message: "Invalid id"})
+            }
+
+            await Item.destroy({ where: { id } })
+            res.status(200).json({message: "You deleted item with id " + id})
+        } catch (e) {
+            res.status(400).json(e)
+            console.log(e)
+        }
     }
 }
 
