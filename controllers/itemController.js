@@ -5,6 +5,7 @@ const { Item } = require("../models")
 class ItemController {
     async create(req, res) {
         try {
+            res.header("Access-Control-Allow-Origin", "*")
             const { name, price, brandId, typeId, info } = req.body
             const { img } = req.files
             let fileName = uuid.v4() + ".jpg"
@@ -20,6 +21,7 @@ class ItemController {
 
     async getAll(req, res) {
         try {
+            res.header("Access-Control-Allow-Origin", "*")
             let { brandId, typeId, limit, page, itemList } = req.query
 
             page = page || 1
@@ -59,6 +61,7 @@ class ItemController {
 
     async getOne(req, res) {
         try {
+            res.header("Access-Control-Allow-Origin", "*")
             const { id } = req.params
             const item = await Item.findOne({ where: { id } })
             res.status(200).json(item)
@@ -70,6 +73,7 @@ class ItemController {
 
     async delete(req, res) {
         try {
+            res.header("Access-Control-Allow-Origin", "*")
             let { brandId, typeId } = req.query
 
             if (brandId && !typeId) {
@@ -109,15 +113,16 @@ class ItemController {
 
     async deleteOne(req, res) {
         try {
+            res.header("Access-Control-Allow-Origin", "*")
             const { id } = req.params
-            
+
             const item = await Item.findOne({ where: { id } })
             if (!item) {
-                return res.status(400).json({message: "Invalid id"})
+                return res.status(400).json({ message: "Invalid id" })
             }
 
             await Item.destroy({ where: { id } })
-            res.status(200).json({message: "You deleted item with id " + id})
+            res.status(200).json({ message: "You deleted item with id " + id })
         } catch (e) {
             res.status(400).json(e)
             console.log(e)
