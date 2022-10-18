@@ -10,7 +10,7 @@ class ItemController {
             const { name, price, brandId, typeId, info } = req.body
             const { img } = req.files
             let fileName = uuid.v4() + ".jpg"
-            img.mv(path.resolve(__dirname, "..", "static", fileName))
+            img.mv(path.resolve(__dirname, "..", "static", fileName), err => console.log(err))
 
             const item = await Item.create({ name, price, brandId, typeId, info, img: fileName })
             return res.json(item)
