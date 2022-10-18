@@ -12,6 +12,14 @@ class ItemController {
             console.log(`1 ${path.resolve(__dirname, "..")}\n2 ${path.resolve(__dirname, "..", "static")}`)
             // img.mv(path.resolve(__dirname, "..", "static", fileName))
 
+            fs.readdir(path.resolve(__dirname, "..", "static"), function(err, items) {
+                console.log(items)
+            
+                for (let i=0; i<items.length; i++) {
+                    console.log(items[i])
+                }
+            });
+
             const item = await Item.create({ name, price, brandId, typeId, info, img: fileName })
             return res.json(item)
         } catch (e) {
