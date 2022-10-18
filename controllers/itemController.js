@@ -12,6 +12,7 @@ class ItemController {
             let fileName = uuid.v4() + ".jpg"
             img.mv(path.resolve(__dirname, "..", "static", fileName), err => console.log(err))
 
+            
             fs.readdir(path.resolve(__dirname, "..", "static"), (err, files) => {
                 console.log(files)
             })
