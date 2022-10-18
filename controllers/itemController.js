@@ -10,16 +10,12 @@ class ItemController {
             const { name, price, brandId, typeId, info } = req.body
             const { img } = req.files
             let fileName = uuid.v4() + ".jpg"
-            console.log(`1 ${path.resolve(__dirname, "..")}\n2 ${path.resolve(__dirname, "..", "static")}`)
+            console.log(path.resolve(__dirname, "..", "static", fileName))
             // img.mv(path.resolve(__dirname, "..", "static", fileName))
 
-            fs.readdir(path.resolve(__dirname, "..", "static"), function(err, items) {
-                console.log(items)
-            
-                for (let i=0; i<items.length; i++) {
-                    console.log(items[i])
-                }
-            });
+            fs.readdir(path.resolve(__dirname, "..", "static"), (err, files) => {
+                console.log(files)
+            })
 
             const item = await Item.create({ name, price, brandId, typeId, info, img: fileName })
             return res.json(item)
