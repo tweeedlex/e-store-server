@@ -10,9 +10,10 @@ class ItemController {
             const { name, price, brandId, typeId, info } = req.body
             const { img } = req.files
             let fileName = uuid.v4() + ".jpg"
-            img.mv(path.resolve(__dirname, "..", "static", fileName), err => console.log(err))
+            img.name = fileName
+            img.mv(path.resolve(__dirname, "..", "static"))
+            console.log("img " + img)
 
-            
             fs.readdir(path.resolve(__dirname, "..", "static"), (err, files) => {
                 console.log(files)
             })
