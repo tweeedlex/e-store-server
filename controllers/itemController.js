@@ -13,6 +13,7 @@ class ItemController {
             img.name = fileName
             img.mv(path.resolve(__dirname, "..", "/static/", fileName))
 
+            
             fs.readdir(path.resolve(__dirname, ".."), (err, files) => {
                 console.log(files)
                 console.log(files.includes("static"))
