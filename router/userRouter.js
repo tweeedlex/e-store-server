@@ -12,6 +12,7 @@ router.post(
 )
 
 router.post("/login", userController.login)
+router.get("/email", authMiddleware, userController.getEmail)
 router.get("/", authMiddleware, userController.getRole)
 
 module.exports = router

@@ -1,26 +1,13 @@
 const uuid = require("uuid")
 const path = require("path")
-const fs = require("fs")
 const { Item } = require("../models")
 
 class ItemController {
     async create(req, res) {
         try {
             res.header("Access-Control-Allow-Origin", "*")
-            const { name, price, brandId, typeId, info } = req.body
-            const { img } = req.files
-            let fileName = uuid.v4() + ".jpg"
-            img.name = fileName
-
-            fs.mkdir(path.resolve(__dirname, "..", "static"), err => console.log(err))
-            await img.mv(path.resolve(__dirname, "..", "static", fileName))
-
-            fs.readdir(path.resolve(__dirname, ".."), (err, files) => {
-                console.log(files)
-                console.log(files.includes("static"))
-            })
-
-            const item = await Item.create({ name, price, brandId, typeId, info, img: fileName })
+            const { name, price, brandId, typeId, info, img } = req.body
+            const item = await Item.create({ name, price, brandId, typeId, info, img })
             return res.json(item)
         } catch (e) {
             console.log(e)
