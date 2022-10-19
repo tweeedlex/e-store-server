@@ -72,6 +72,11 @@ class UserController {
         res.header("Access-Control-Allow-Origin", "*")
         return res.json(req.user.role)
     }
+
+    async getEmail(req, res) {
+        res.header("Access-Control-Allow-Origin", "*")
+        return res.json(req.user.email)
+    }
 }
 
 module.exports = new UserController()

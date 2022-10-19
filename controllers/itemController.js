@@ -6,12 +6,8 @@ class ItemController {
     async create(req, res) {
         try {
             res.header("Access-Control-Allow-Origin", "*")
-            const { name, price, brandId, typeId, info } = req.body
-            const { img } = req.files
-            let fileName = uuid.v4() + ".jpg"
-            img.mv(path.resolve(__dirname, "..", "static", fileName))
-
-            const item = await Item.create({ name, price, brandId, typeId, info, img: fileName })
+            const { name, price, brandId, typeId, info, img } = req.body
+            const item = await Item.create({ name, price, brandId, typeId, info, img })
             return res.json(item)
         } catch (e) {
             console.log(e)
