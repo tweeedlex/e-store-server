@@ -6,7 +6,10 @@ class ItemController {
     async create(req, res) {
         try {
             res.header("Access-Control-Allow-Origin", "*")
-            const { name, price, brandId, typeId, info, img } = req.body
+            let { name, price, brandId, typeId, info, img } = req.body
+            if (!img) {
+                img = "https://banksiafdn.com/wp-content/uploads/2019/10/placeholde-image.jpg"
+            }
             const item = await Item.create({ name, price, brandId, typeId, info, img })
             return res.json(item)
         } catch (e) {
