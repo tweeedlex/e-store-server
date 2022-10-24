@@ -1,6 +1,6 @@
 const uuid = require("uuid")
 const path = require("path")
-const { Item } = require("../models")
+const { Item, Basket, BasketItem, Type, Brand } = require("../models")
 
 class ItemController {
     async create(req, res) {
@@ -122,6 +122,35 @@ class ItemController {
 
             await Item.destroy({ where: { id } })
             res.status(200).json({ message: "You deleted item with id " + id })
+        } catch (e) {
+            res.status(400).json(e)
+            console.log(e)
+        }
+    }
+
+    async getItemInfo(req, res) {
+        try {
+            res.header("Access-Control-Allow-Origin", "*")
+
+            let itemInBasket = false
+
+            const { itemId } = req.query
+
+            const {typeId, brandId} = await Item.findOne({where: {id: itemId}})
+            const {name: type} = await Type.findOne({where: {id: typeId}})
+            const {name: brand} = await Brand.findOne({where: {id: brandId}})
+
+            if (req.user) {
+                const userId = req.user.id
+                const basket = await Basket.findOne({ where: { userId } })
+                const item = await BasketItem.findOne({ where: { basketId: basket.id, itemId } })
+
+                if (item) {
+                    itemInBasket = true
+                }
+            }
+
+            return res.json({type, brand, itemInBasket})
         } catch (e) {
             res.status(400).json(e)
             console.log(e)
