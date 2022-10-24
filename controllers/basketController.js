@@ -52,6 +52,21 @@ class BasketController {
         }
     }
 
+    async removeAll(req, res) {
+        try {
+            res.header("Access-Control-Allow-Origin", "*")
+            const { id } = req.user
+
+            const basket = await Basket.findOne({ where: { userId: id } })
+
+            await BasketItem.destroy({ where: { basketId: basket.id } })
+            return res.status(200).json({ message: "Items deleted" })
+        } catch (e) {
+            res.status(400).json(e)
+            console.log(e)
+        }
+    }
+
     async get(req, res) {
         try {
             const { id } = req.user
