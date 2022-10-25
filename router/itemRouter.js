@@ -5,6 +5,7 @@ const authMiddleware = require("../middleware/authMiddleware")
 const roleMiddleware = require("../middleware/roleMiddleware")
 
 router.post("/", authMiddleware, roleMiddleware("ADMIN"), itemController.create)
+router.get("/itemInfo", itemController.getItemInfo)
 router.get("/", itemController.getAll)
 router.get("/:id", itemController.getOne)
 
