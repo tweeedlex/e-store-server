@@ -131,34 +131,30 @@ class ItemController {
     }
 
     async getItemInfo(req, res) {
+        let itemInBasket = false
+
+        const { itemId } = req.query
+
+        const { typeId, brandId } = await Item.findOne({ where: { id: itemId } })
+        const { name: type } = await Type.findOne({ where: { id: typeId } })
+        const { name: brand } = await Brand.findOne({ where: { id: brandId } })
+
         try {
-            res.header("Access-Control-Allow-Origin", "*")
-
-            let itemInBasket = false
-
-            const { itemId } = req.query
-
-            const { typeId, brandId } = await Item.findOne({ where: { id: itemId } })
-            const { name: type } = await Type.findOne({ where: { id: typeId } })
-            const { name: brand } = await Brand.findOne({ where: { id: brandId } })
-
             const token = req.headers.authorization.split(" ")[1]
-            if (token) {
-                const user = jwt.verify(token, secret)
 
-                const userId = user.id
-                const basket = await Basket.findOne({ where: { userId } })
-                const item = await BasketItem.findOne({ where: { basketId: basket.id, itemId } })
+            const user = jwt.verify(token, secret)
 
-                if (item) {
-                    itemInBasket = true
-                }
+            const userId = +user.id
+            const basket = await Basket.findOne({ where: { userId } })
+            const item = await BasketItem.findOne({ where: { basketId: basket.id, itemId } })
+
+            if (item) {
+                itemInBasket = true
             }
 
             return res.json({ type, brand, itemInBasket })
         } catch (e) {
-            res.status(400).json(e)
-            console.log(e)
+            return res.json({ type, brand })
         }
     }
 }
