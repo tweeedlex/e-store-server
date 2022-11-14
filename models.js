@@ -34,8 +34,16 @@ const Brand = sequelize.define("brand", {
     name: {type: DataTypes.STRING, unique: true, allowNull: false},
 })
 
-const TypeBrand = sequelize.define("type_brand", {
+const Order = sequelize.define("order", {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    completed: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false},
+    name: {type: DataTypes.STRING, allowNull: false},
+    surname: {type: DataTypes.STRING, allowNull: false},
+    fathersName: {type: DataTypes.STRING, allowNull: true},
+    phone: {type: DataTypes.STRING, allowNull: false},
+    deliveryMethod: {type: DataTypes.STRING, allowNull: false},
+    deliveryAddress: {type: DataTypes.STRING, allowNull: false},
+    items: {type: DataTypes.JSON, allowNull: false}
 })
 
 User.hasOne(Basket)
@@ -53,8 +61,8 @@ Item.belongsTo(Brand)
 Item.hasMany(BasketItem)
 BasketItem.belongsTo(Item)
 
-Type.belongsToMany(Brand, {through: TypeBrand})
-Brand.belongsToMany(Type, {through: TypeBrand})
+User.hasMany(Order)
+Order.belongsTo(User)
 
 module.exports = {
     User, 
@@ -63,5 +71,5 @@ module.exports = {
     Item,
     Brand,
     Type,
-    TypeBrand
+    Order
 }

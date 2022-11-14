@@ -117,7 +117,7 @@ class ItemController {
             res.header("Access-Control-Allow-Origin", "*")
             const { id } = req.params
 
-            const item = await Item.findOne({ where: { id } })
+            const item = await Item.findOne({ where: { id: +id } })
             if (!item) {
                 return res.status(400).json({ message: "Invalid id" })
             }
@@ -134,10 +134,16 @@ class ItemController {
         let itemInBasket = false
 
         const { itemId } = req.query
+        const item = await Item.findOne({ where: { id: itemId } })
 
-        const { typeId, brandId } = await Item.findOne({ where: { id: itemId } })
+        if (item === null) {
+            return res.status(400).json({message: "Invalid id"})
+        }
+
+        const { typeId, brandId } = item
         const { name: type } = await Type.findOne({ where: { id: typeId } })
         const { name: brand } = await Brand.findOne({ where: { id: brandId } })
+
 
         try {
             const token = req.headers.authorization.split(" ")[1]
