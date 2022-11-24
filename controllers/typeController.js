@@ -1,4 +1,4 @@
-const { Type } = require("../models")
+const { Type, Item } = require("../models")
 
 class TypeController {
     async create(req, res) {
@@ -44,6 +44,12 @@ class TypeController {
             if (!type) {
                 return res.status(400).json({ message: "Invalid id" })
             }
+
+            const items = await Item.findAll({ where: { typeId: id } })
+            if (!items.length) {
+                return res.status(400).json({ message: "Invalid id" })
+            }
+            await Item.destroy({ where: { typeId: id } })
 
             await Type.destroy({ where: { id } })
             return res.status(200).json({ message: "You deleted type with id " + id })

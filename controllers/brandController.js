@@ -1,4 +1,4 @@
-const { Brand } = require("../models")
+const { Brand, Item } = require("../models")
 
 class BrandController {
     async create(req, res) {
@@ -44,6 +44,13 @@ class BrandController {
             if (!brand) {
                 return res.status(400).json({ message: "Invalid id" })
             }
+
+            const items = await Item.findAll({ where: { brandId: id } })
+            if (!items.length) {
+                return res.status(400).json({ message: "Invalid id" })
+            }
+
+            await Item.destroy({ where: { brandId: id } })
 
             await Brand.destroy({ where: { id } })
             return res.status(200).json({ message: "You deleted brand with id " + id })
