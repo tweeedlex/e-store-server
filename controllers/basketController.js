@@ -78,6 +78,36 @@ class BasketController {
             console.log(e)
         }
     }
+
+    async getAmount(req, res) {
+        try {
+            const { id } = req.user
+            const { itemId } = req.query
+            
+            const basket = await Basket.findOne({ where: { userId: id } })
+            const item = await BasketItem.findOne({ where: { basketId: basket.id, itemId } })
+
+            return res.status(200).json(item.amount)
+        } catch (e) {
+            res.status(400).json(e)
+            console.log(e)
+        }
+    }
+
+    async updateAmount(req, res) {
+        try {
+            const { id } = req.user
+            const { itemId, amount } = req.query
+
+            const basket = await Basket.findOne({ where: { userId: id } })
+            await BasketItem.update({amount}, { where: { basketId: basket.id, itemId } })
+            
+            return res.status(200).json({message: `Item ${itemId} amount was set to ${amount}`})
+        } catch (e) {
+            res.status(400).json(e)
+            console.log(e)
+        }
+    }
 }
 
 module.exports = new BasketController()

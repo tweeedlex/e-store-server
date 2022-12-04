@@ -14,6 +14,7 @@ const Basket = sequelize.define("basket", {
 
 const BasketItem = sequelize.define("basket_item", {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    amount: {type: DataTypes.INTEGER, defaultValue: 1, allowNull: false}
 })
 
 const Item = sequelize.define("item", {

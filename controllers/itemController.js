@@ -26,7 +26,7 @@ class ItemController {
             let { brandId, typeId, limit, page, itemList } = req.query
 
             page = page || 1
-            limit = Number(limit) || 16
+            limit = Number(limit) || 20
             let offset = page * limit - limit
 
             let items = []
