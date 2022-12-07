@@ -40,18 +40,17 @@ class TypeController {
         try {
             res.header("Access-Control-Allow-Origin", "*")
             const { id } = req.params
-            const type = await Type.findOne({ where: { id } })
+            const type = await Type.findOne({ where: { id: +id } })
             if (!type) {
                 return res.status(400).json({ message: "Invalid id" })
             }
 
-            const items = await Item.findAll({ where: { typeId: id } })
-            if (!items.length) {
-                return res.status(400).json({ message: "Invalid id" })
+            const items = await Item.findAll({ where: { typeId: +id } })
+            if (items.length) {
+                await Item.destroy({ where: { typeId: +id } })
             }
-            await Item.destroy({ where: { typeId: id } })
 
-            await Type.destroy({ where: { id } })
+            await Type.destroy({ where: { id: +id } })
             return res.status(200).json({ message: "You deleted type with id " + id })
         } catch (e) {
             console.log(e)
