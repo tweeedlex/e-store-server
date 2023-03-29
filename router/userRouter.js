@@ -12,7 +12,9 @@ router.post(
 )
 
 router.post("/login", userController.login)
+router.post("/google", userController.loginWithGoogle)
 router.get("/email", authMiddleware, userController.getEmail)
+router.get("/auth", authMiddleware, userController.check)
 router.get("/", authMiddleware, userController.getRole)
 
 module.exports = router

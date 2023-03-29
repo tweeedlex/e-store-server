@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken")
-const { secret } = require("../config")
 
 module.exports = authMiddleWare = (req, res, next) => {
     if (req.method === "OPTIONS") {
@@ -12,7 +11,7 @@ module.exports = authMiddleWare = (req, res, next) => {
             res.status(400).json({message: "User is not authorized"})
         }
         
-        const user = jwt.verify(token, secret)
+        const user = jwt.verify(token, process.env.SECRET_KEY)
         req.user = user
         next()
     } catch (e) {

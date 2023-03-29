@@ -47,6 +47,11 @@ const Order = sequelize.define("order", {
     items: {type: DataTypes.JSON, allowNull: false}
 })
 
+const Rating = sequelize.define("rating", {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    rating: {type: DataTypes.INTEGER, allowNull: false}
+})
+
 User.hasOne(Basket)
 Basket.belongsTo(User)
 
@@ -65,6 +70,12 @@ BasketItem.belongsTo(Item)
 User.hasMany(Order)
 Order.belongsTo(User)
 
+Item.hasMany(Rating)
+Rating.belongsTo(Item)
+
+User.hasMany(Rating)
+Rating.belongsTo(User)
+
 module.exports = {
     User, 
     Basket,
@@ -72,5 +83,6 @@ module.exports = {
     Item,
     Brand,
     Type,
-    Order
+    Order,
+    Rating
 }

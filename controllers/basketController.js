@@ -70,6 +70,9 @@ class BasketController {
     async get(req, res) {
         try {
             const { id } = req.user
+            if (!id) {
+                return res.json({message: "User not authorized"})
+            }
             const basket = await Basket.findOne({ where: { userId: id } })
             const items = await BasketItem.findAll({ where: { basketId: basket.id } })
             return res.status(200).json(items)
