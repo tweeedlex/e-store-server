@@ -15,12 +15,7 @@ class UserController {
     try {
       // validation
       res.header("Access-Control-Allow-Origin", "*");
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-
-      const { email, password } = req.body;
+      const { uid, email } = req.body;
 
       const candidate = await User.findOne({ where: { email } });
       if (candidate) {
@@ -29,12 +24,8 @@ class UserController {
           .json({ message: "User with this email already exists" });
       }
 
-      const hashPassword = bcrypt.hashSync(password, 5);
-      const user = new User({ email, password: hashPassword, role: "USER" });
+      const user = new User({ id: uid, email, role: "USER" });
       await user.save();
-
-      const basket = new Basket({ userId: user.id });
-      await basket.save();
 
       return res.status(200).json({ message: "You succesfully registered" });
     } catch (e) {
@@ -46,16 +37,11 @@ class UserController {
   async login(req, res) {
     try {
       res.header("Access-Control-Allow-Origin", "*");
-      const { email, password } = req.body;
+      const { uid } = req.body;
 
-      const user = await User.findOne({ where: { email } });
+      const user = await User.findOne({ where: { id: uid } });
       if (!user) {
         return res.status(400).json({ message: "User was not found" });
-      }
-
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return res.status(400).json({ message: "Invalid password" });
       }
 
       const token = generateJwt(user.id, user.email, user.role);
