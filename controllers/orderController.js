@@ -1,9 +1,12 @@
-const { Order } = require("../models");
+const { Order, Item } = require("../models");
+const { Telegraf } = require("telegraf");
+
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
 class OrderController {
   async add(req, res) {
     try {
-      const { items, phone, email, telegram } = req.body;
+      const { items, phone, email, telegram, userId } = req.body;
 
       if (!items || !phone) {
         return res.status(400).json({ message: "Missing fields" });
@@ -13,8 +16,25 @@ class OrderController {
         email,
         phone,
         telegram,
-        items
+        items,
+        userId: userId ? userId : "",
       });
+
+      const orderedItems = await Item.findAll({
+        where: { id: items.map((item) => item.id) },
+      });
+
+      console.log(orderedItems);
+      await bot.telegram.sendMessage(
+        process.env.CHAT_ID,
+        `Нове замовлення! \n\nТелефон: ${phone}\nTelegram: ${telegram}\nEmail: ${email}\n\nЗамовлені товари: \n\n` +
+          `${orderedItems.map((item) => {
+            return `${item.name} - ${
+              items.find((i) => i.id === item.id).amount
+            } шт. \nІдентифікатор: ${item.id}\n\n`;
+          })}
+        `.replace(/,/g, "")
+      );
 
       return res.status(200).json(order);
     } catch (e) {
@@ -79,6 +99,17 @@ class OrderController {
         orders = await Order.findAndCountAll({ limit, offset });
       }
 
+      return res.status(200).json(orders);
+    } catch (e) {
+      res.status(400).json(e);
+      console.log(e);
+    }
+  }
+
+  async getUserOrders(req, res) {
+    try {
+      const { id } = req.user;
+      const orders = await Order.findAll({ where: { userId: id } });
       return res.status(200).json(orders);
     } catch (e) {
       res.status(400).json(e);

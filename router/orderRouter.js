@@ -18,5 +18,6 @@ router.put(
   orderController.complete
 );
 router.get("/", authMiddleWare, roleMiddleware("MANAGER"), orderController.get);
+router.get("/user", authMiddleWare, orderController.getUserOrders);
 
 module.exports = router;

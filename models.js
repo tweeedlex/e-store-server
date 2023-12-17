@@ -32,6 +32,7 @@ const Order = sequelize.define("order", {
   telegram: { type: DataTypes.STRING },
   email: { type: DataTypes.STRING },
   items: { type: DataTypes.JSON, allowNull: false },
+  userId: { type: DataTypes.STRING },
 });
 
 const Rating = sequelize.define("rating", {
